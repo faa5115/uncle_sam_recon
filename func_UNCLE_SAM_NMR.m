@@ -1,4 +1,4 @@
-function [rawUpdate, f, Scalib, normValues] = func_UNCLE_SAM_NMR(raw_og, kSize, nIter, calib, bUseGPU, idxM)
+function [rawUpdate, f, Scalib, normValues] = func_UNCLE_SAM_NMR(raw_og, kSize, nIter, calib, bUseGPU, idxM, noise_floor)
 %put a description up here.  Acknowledge Mark and Ajin. Cite Mark, Lustig, and
 %Haldar. 
 
@@ -13,6 +13,7 @@ normValues = zeros(1, nIter);
     %Noise taken from the minimum k-space elements.  Copied from Mark Bydder ---------------------
     %Taken from Mark's sake.  
     %sorts all acquired k-space data.
+    if isempty(noise_floor)
     tmp = nonzeros(raw_og); 
     %sorts all data in acending order.  for k-space data, this puts the
     %large magnitudes at the edges. 
@@ -23,6 +24,8 @@ normValues = zeros(1, nIter);
     std1 = 1.4826 * median(abs(tmp-median(tmp))) * sqrt(2);
 
     noise_floor = std1 * sqrt(nnz(raw_og)/Nc);
+
+    end
     %----------------------------------------------------------------------------------------------
 
 
